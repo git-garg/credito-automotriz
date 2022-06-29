@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pichincha.stf.entity.RespuestaTo;
 import com.pichincha.stf.entity.Vehiculo;
 import com.pichincha.stf.entity.VehiculoTo;
 import com.pichincha.stf.service.VehiculoServicio;
@@ -25,16 +26,25 @@ public class VehiculoContoller {
 	private VehiculoServicio vehiculoServicio;
 
 	@PostMapping("/guardar")
-	public ResponseEntity<VehiculoTo> guardarVehiculo(@RequestBody VehiculoTo vehiculoTo) {
+	public ResponseEntity<RespuestaTo> guardarVehiculo(@RequestBody VehiculoTo vehiculoTo) {
+
+		RespuestaTo respuestaTo = new RespuestaTo();
+		String mensaje = "";
 
 		try {
 			Vehiculo vehiculo = vehiculoServicio.guardar(vehiculoTo);
-			log.info("Vehículo guardado correctamente"
-					.concat(vehiculo.getCodigoVehiculo().toString().concat(" - Placa: ".concat(vehiculo.getPlaca()))));
-			return new ResponseEntity<VehiculoTo>(vehiculoTo, HttpStatus.OK);
+			mensaje = "Vehículo guardado correctamente"
+					.concat(vehiculo.getCodigoVehiculo().toString().concat(" - Placa: ".concat(vehiculo.getPlaca())));
+			respuestaTo.setRespuesta("OK");
+			respuestaTo.setMensaje(mensaje);
+			log.info(mensaje);
+			return new ResponseEntity<RespuestaTo>(respuestaTo, HttpStatus.OK);
 		} catch (CreditoAutomotrizException e) {
-			log.error("No se pudo guardar el vehíulo. Error: " + e.getMessage());
-			return new ResponseEntity<>(HttpStatus.OK);
+			mensaje = "No se pudo guardar el vehíulo. Error: " + e.getMessage();
+			respuestaTo.setRespuesta("ERR");
+			respuestaTo.setMensaje(mensaje);
+			log.error(mensaje);
+			return new ResponseEntity<RespuestaTo>(respuestaTo, HttpStatus.OK);
 
 		}
 	}

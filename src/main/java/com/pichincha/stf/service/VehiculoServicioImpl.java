@@ -23,23 +23,33 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 
 	@Override
 	public Vehiculo guardar(VehiculoTo vehiculoTo) throws CreditoAutomotrizException {
-		Vehiculo vehiculo = vehiculoTo.getVehiculo();
-		String abreviaturaMarca = vehiculoTo.getAbreviaturaMarca();
-		Marca marca = marcaRepository.findByAbreviatura(abreviaturaMarca);
 
-		if (null == marca) {
-			throw new CreditoAutomotrizException("No existe marca para: " + abreviaturaMarca);
+		if (existeVehiculo(vehiculoTo)) {
+			throw new CreditoAutomotrizException(
+					"Ya existe un vehiculo con placa: " + vehiculoTo.getVehiculo().getPlaca());
 		} else {
-			vehiculo.setMarca(marca);
-			try {
-				return this.guardar(vehiculo);
-			} catch (ConstraintViolationException e) {
-				throw new CreditoAutomotrizException("No se pudo guarda el registro. Placa: "
-						+ vehiculo.getPlaca().concat(" Error: ".concat(e.getMessage())));
-			}
+			Vehiculo vehiculo = vehiculoTo.getVehiculo();
+			String abreviaturaMarca = vehiculoTo.getAbreviaturaMarca();
+			Marca marca = marcaRepository.findByAbreviatura(abreviaturaMarca);
 
+			if (null == marca) {
+				throw new CreditoAutomotrizException("No existe marca para: " + abreviaturaMarca);
+			} else {
+				vehiculo.setMarca(marca);
+				try {
+					return this.guardar(vehiculo);
+				} catch (ConstraintViolationException e) {
+					throw new CreditoAutomotrizException("No se pudo guarda el registro. Placa: "
+							+ vehiculo.getPlaca().concat(" Error: ".concat(e.getMessage())));
+				}
+
+			}
 		}
 
+	}
+
+	private boolean existeVehiculo(VehiculoTo vehiculoTo) {
+		return null != vehiculoRepository.findByPlaca(vehiculoTo.getVehiculo().getPlaca());
 	}
 
 	public Vehiculo guardar(Vehiculo vehiculo) {
