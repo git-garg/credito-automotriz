@@ -37,4 +37,7 @@ public class Patio {
 	@Column
 	private String telefono;
 
+	@Column(name = "numero_punto_venta")
+	private String numeroPuntoVenta;
+
 }

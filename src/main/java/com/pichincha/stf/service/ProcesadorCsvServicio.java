@@ -6,10 +6,10 @@ package com.pichincha.stf.service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.List;
 
 import com.opencsv.exceptions.CsvException;
-import com.pichincha.stf.service.exception.ClienteException;
-import com.pichincha.stf.service.exception.CreditoAutomotrizException;
 
 /**
  * 
@@ -18,7 +18,10 @@ import com.pichincha.stf.service.exception.CreditoAutomotrizException;
  */
 public interface ProcesadorCsvServicio {
 
-	void cargarClientes(String ruta, String archivo)
-			throws IOException, URISyntaxException, CsvException, ClienteException, CreditoAutomotrizException;
+	
 
+	Collection<String[]> obtenerDuplicados(List<String[]> registrosArchivoCsv, int posicionColumnaCsv);
+
+	List<String[]> obtenerRegistrosArchivoCsv(String ruta, String archivo)
+			throws IOException, CsvException, URISyntaxException;
 }
