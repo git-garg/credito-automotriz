@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import com.pichincha.stf.entity.Patio;
 import com.pichincha.stf.respository.PatioRepository;
 
+/**
+ * Clase de implentacion para la carga de patios
+ */
 @Service
 public class PatioServicioImpl implements PatioServicio {
 
@@ -18,7 +21,7 @@ public class PatioServicioImpl implements PatioServicio {
 
 	@Override
 	public void cargarPatios() {
-		
+
 		patioRepository.save(obtenerPatio("Pase San Francisco", "Cumbaya", "022856321", "123"));
 		patioRepository.save(obtenerPatio("Carrión", "Santa Clara", "022856852", "456"));
 		patioRepository.save(obtenerPatio("Condado", "Condado Shoping", "022856974", "789"));

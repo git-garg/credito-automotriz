@@ -59,7 +59,7 @@ public class ClienteServicioImpl implements ClienteServicio {
 				}
 			});
 
-			log.info("Total clientes ingresados: " + clienteRepository.findAll().size());
+			log.info("Total clientes ingresados: " + clienteRepository.count());
 			clienteRepository.findAll().forEach(cliente -> log.info("Identificacion: " + cliente.getIdentificacion()));
 		} else {
 			log.error("Existen clientes duplicados");
