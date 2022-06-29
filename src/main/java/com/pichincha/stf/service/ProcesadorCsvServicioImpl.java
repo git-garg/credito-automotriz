@@ -1,7 +1,6 @@
 /**
  * Clase: ProcesadorCsvServicioImpl.java
  * Fecha: 27 jun. 2022
- * Usuario: GABRIEL
  */
 package com.pichincha.stf.service;
 
@@ -11,11 +10,14 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.opencsv.CSVParser;
@@ -26,6 +28,7 @@ import com.opencsv.exceptions.CsvException;
 import com.pichincha.stf.entity.Cliente;
 import com.pichincha.stf.entity.EstadoCivilEnum;
 import com.pichincha.stf.entity.SiNoEnum;
+import com.pichincha.stf.respository.ClienteRepository;
 import com.pichincha.stf.service.exception.CreditoAutomotrizException;
 import com.pichincha.stf.util.FechaUtil;
 import com.pichincha.stf.util.Util;
@@ -38,25 +41,59 @@ import com.pichincha.stf.util.Util;
 @Service
 public class ProcesadorCsvServicioImpl implements ProcesadorCsvServicio {
 
+	@Autowired
+	private ClienteRepository clienteRepository;
+
 	private static final Logger log = LoggerFactory.getLogger(ProcesadorCsvServicioImpl.class);
 
 	/**
 	 * Carga los clientes a partir de un archivo csv
 	 */
 	@Override
-	public void cargarClientes() throws IOException, URISyntaxException, CsvException {
+	public void cargarClientes(String ruta, String archivo) throws IOException, URISyntaxException, CsvException {
 
-		List<String[]> registrosArchivoCsv = obtenerRegistrosArchivoCsv("static", "clientes.csv");
-		List<Cliente> listaCliente = new ArrayList<>();
+		List<String[]> registrosArchivoCsv = obtenerRegistrosArchivoCsv(ruta, archivo);
+		Collection<String[]> duplicados = obtenerDuplicados(registrosArchivoCsv);
 
-		registrosArchivoCsv.stream().forEach(registroCsv -> {
-			try {
-				listaCliente.add(obtenerCliente(registroCsv));
-			} catch (CreditoAutomotrizException e) {
-				log.error("No se pudo crear el cliente para: " + registroCsv[0] + " Error: " + e.getMessage());
+		if (duplicados.isEmpty()) {
+
+			registrosArchivoCsv.stream().forEach(registroCsv -> {
+				try {
+					clienteRepository.save(obtenerCliente(registroCsv));
+				} catch (CreditoAutomotrizException e) {
+					log.error("No se pudo crear el cliente con la identificacion: " + registroCsv[0] + " Error: "
+							+ e.getMessage());
+				}
+			});
+
+			log.info("Total registros ingresados: " + clienteRepository.findAll().size());
+			clienteRepository.findAll().forEach(cliente -> log.info("Identificacion: " + cliente.getIdentificacion()));
+		} else {
+			log.error("Existen registros duplicados");
+			duplicados.stream().forEach(duplicado -> log.error("Identificacion duplicada: " + duplicado[0]));
+		}
+	}
+
+	/**
+	 * obtiene los registros duplicados
+	 * 
+	 * @param registrosArchivoCsv
+	 * @return
+	 */
+	private Collection<String[]> obtenerDuplicados(List<String[]> registrosArchivoCsv) {
+
+		Map<String, String[]> mapa = new ConcurrentHashMap<String, String[]>();
+		Map<String, String[]> duplicado = new ConcurrentHashMap<String, String[]>();
+		registrosArchivoCsv.stream().forEach(registro -> {
+
+			if (mapa.get(registro[0]) == null) {
+				mapa.put(registro[0], registro);
+			} else {
+				duplicado.put(registro[0], registro);
 			}
 		});
 
+		return duplicado.values();
 	}
 
 	/**
@@ -68,8 +105,6 @@ public class ProcesadorCsvServicioImpl implements ProcesadorCsvServicio {
 	 */
 	private Cliente obtenerCliente(String[] registroCsv) throws CreditoAutomotrizException {
 		Cliente cliente = new Cliente();
-
-		Arrays.stream(registroCsv).forEach(registro -> System.out.println(registro));
 
 		cliente.setIdentificacion(registroCsv[0]);
 		cliente.setNombre(registroCsv[1]);

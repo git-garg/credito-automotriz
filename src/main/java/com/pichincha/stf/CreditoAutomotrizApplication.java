@@ -10,6 +10,9 @@ import com.pichincha.stf.service.ProcesadorCsvServicio;
 @SpringBootApplication
 public class CreditoAutomotrizApplication implements CommandLineRunner {
 
+	private static final String RUTA = "static";
+	private static final String CLIENTES_CSV = "clientes.csv";
+
 	@Autowired
 	private ProcesadorCsvServicio procesadorCsvServicio;
 
@@ -19,8 +22,7 @@ public class CreditoAutomotrizApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
-		procesadorCsvServicio.cargarClientes();
+		procesadorCsvServicio.cargarClientes(RUTA, CLIENTES_CSV);
 	}
 
 }

@@ -1,7 +1,6 @@
 /**
  * Clase: Patio.java
  * Fecha: 27 jun. 2022
- * Usuario: GABRIEL
  */
 package com.pichincha.stf.entity;
 
@@ -28,15 +27,14 @@ public class Patio {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigo_patio")
 	private Long codigoPatio;
-	
+
 	@Column
 	private String nombre;
-	
+
 	@Column
 	private String direccion;
-	
+
 	@Column
 	private String telefono;
-	
 
 }

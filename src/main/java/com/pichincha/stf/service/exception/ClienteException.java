@@ -1,7 +1,6 @@
 /**
  * Clase: ClienteException.java
  * Fecha: 28 jun. 2022
- * Usuario: GABRIEL
  */
 package com.pichincha.stf.service.exception;
 

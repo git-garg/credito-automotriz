@@ -1,7 +1,6 @@
 /**
  * Clase: ProcesadorCsvServicio.java
  * Fecha: 27 jun. 2022
- * Usuario: GABRIEL
  */
 package com.pichincha.stf.service;
 
@@ -19,7 +18,7 @@ import com.pichincha.stf.service.exception.CreditoAutomotrizException;
  */
 public interface ProcesadorCsvServicio {
 
-	void cargarClientes()
+	void cargarClientes(String ruta, String archivo)
 			throws IOException, URISyntaxException, CsvException, ClienteException, CreditoAutomotrizException;
 
 }
