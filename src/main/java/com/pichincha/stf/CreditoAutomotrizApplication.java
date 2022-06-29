@@ -20,8 +20,6 @@ public class CreditoAutomotrizApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		String mensaje = procesadorCsvServicio.obtenerRegistrosArchivCsv("static", "clientes.csv");
-		System.out.println(mensaje);
 		procesadorCsvServicio.cargarClientes();
 	}
 

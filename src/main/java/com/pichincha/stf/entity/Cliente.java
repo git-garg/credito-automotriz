@@ -5,7 +5,7 @@
  */
 package com.pichincha.stf.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +34,7 @@ public class Cliente extends Persona {
 	private Long codigoCliente;
 
 	@Column(name = "fecha_nacimiento")
-	private LocalDateTime fechaNacimiento;
+	private LocalDate fechaNacimiento;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "estado_civil")

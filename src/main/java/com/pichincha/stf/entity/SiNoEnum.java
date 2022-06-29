@@ -5,12 +5,29 @@
  */
 package com.pichincha.stf.entity;
 
+import java.util.Arrays;
+
 /**
  * Enumeracion para valores de si, no
  *
  */
 public enum SiNoEnum {
 
-	SI, NO
+	SI("S"), NO("N");
+
+	private String abreviatura;
+
+	private SiNoEnum(String abreviatura) {
+		this.abreviatura = abreviatura;
+	}
+
+	public String getAbreviatura() {
+		return abreviatura;
+	}
+
+	public static SiNoEnum obtenerSiNOEnumPorAbreviatura(String abreviatura) {
+		return Arrays.stream(SiNoEnum.values()).filter(siNo -> siNo.getAbreviatura().equals(abreviatura)).findFirst()
+				.orElse(null);
+	}
 
 }
