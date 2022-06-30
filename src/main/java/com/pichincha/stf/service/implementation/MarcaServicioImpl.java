@@ -2,7 +2,7 @@
  * Clase: MarcaServicioImpl.java
  * Fecha: 29 jun. 2022
  */
-package com.pichincha.stf.service;
+package com.pichincha.stf.service.implementation;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import com.opencsv.exceptions.CsvException;
 import com.pichincha.stf.entity.Marca;
 import com.pichincha.stf.respository.MarcaRepository;
+import com.pichincha.stf.service.MarcaServicio;
+import com.pichincha.stf.service.ProcesadorCsvServicio;
 
 /**
  * Clase de implentacion para la carga de marcas

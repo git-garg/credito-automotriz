@@ -2,7 +2,7 @@
  * Clase: ProcesadorCsvServicioImpl.java
  * Fecha: 27 jun. 2022
  */
-package com.pichincha.stf.service;
+package com.pichincha.stf.service.implementation;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -22,6 +22,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
+import com.pichincha.stf.service.ProcesadorCsvServicio;
 
 /**
  * Clase que contiene los metodos para la lectura del archivo csv

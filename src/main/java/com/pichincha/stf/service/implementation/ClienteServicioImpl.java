@@ -2,7 +2,7 @@
  * Clase: ClienteServicioImpl.java
  * Fecha: 29 jun. 2022
  */
-package com.pichincha.stf.service;
+package com.pichincha.stf.service.implementation;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 
 import com.opencsv.exceptions.CsvException;
 import com.pichincha.stf.entity.Cliente;
-import com.pichincha.stf.entity.EstadoCivilEnum;
-import com.pichincha.stf.entity.SiNoEnum;
+import com.pichincha.stf.entity.enumeration.EstadoCivilEnum;
+import com.pichincha.stf.entity.enumeration.SiNoEnum;
 import com.pichincha.stf.respository.ClienteRepository;
+import com.pichincha.stf.service.ClienteServicio;
+import com.pichincha.stf.service.ProcesadorCsvServicio;
 import com.pichincha.stf.service.exception.CreditoAutomotrizException;
 import com.pichincha.stf.util.FechaUtil;
 import com.pichincha.stf.util.Util;

@@ -4,8 +4,12 @@
  */
 package com.pichincha.stf.entity;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+
+import com.pichincha.stf.entity.enumeration.EstadoVehiculoEnum;
 
 import lombok.Data;
 
@@ -31,7 +37,7 @@ public class Vehiculo {
 	private Long codigoVehiculo;
 
 	@Column
-	@NotEmpty
+	@NotEmpty(message = "El campo placa es obligatrio")
 	private String placa;
 
 	@Column
@@ -39,14 +45,24 @@ public class Vehiculo {
 	private String modelo;
 
 	@Column(name = "numero_chasis")
-	@NotEmpty
+	@NotEmpty(message = "El campo numero de chasis es obligatrio")
 	private String numeroChasis;
 
 	@Column
 	private String tipo;
 
+	@Column
+	private String cilindraje;
+
+	@Column
+	private BigDecimal avaluo;
+
 	@ManyToOne
 	@JoinColumn(name = "codigo_marca", nullable = false)
 	private Marca marca;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "estado_vehiculo")
+	private EstadoVehiculoEnum estadoVehiculo;
 
 }

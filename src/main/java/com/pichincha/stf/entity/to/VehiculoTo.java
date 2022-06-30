@@ -1,4 +1,6 @@
-package com.pichincha.stf.entity;
+package com.pichincha.stf.entity.to;
+
+import com.pichincha.stf.entity.Vehiculo;
 
 import lombok.Data;
 

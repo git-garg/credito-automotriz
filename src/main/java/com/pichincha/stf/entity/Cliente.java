@@ -15,6 +15,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.pichincha.stf.entity.enumeration.EstadoCivilEnum;
+import com.pichincha.stf.entity.enumeration.SiNoEnum;
+
 import lombok.Data;
 
 /**

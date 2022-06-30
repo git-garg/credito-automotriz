@@ -1,4 +1,4 @@
-package com.pichincha.stf.service;
+package com.pichincha.stf.service.implementation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.pichincha.stf.entity.Patio;
 import com.pichincha.stf.respository.PatioRepository;
+import com.pichincha.stf.service.PatioServicio;
 
 /**
  * Clase de implentacion para la carga de patios

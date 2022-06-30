@@ -1,3 +1,7 @@
+/**
+ * Clase: SolicitudCreditoController.java
+ * Fecha: 29 jun. 2022
+ */
 package com.pichincha.stf.controller;
 
 import org.slf4j.Logger;
@@ -11,32 +15,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pichincha.stf.entity.RespuestaTo;
-import com.pichincha.stf.entity.Vehiculo;
-import com.pichincha.stf.entity.to.VehiculoTo;
+import com.pichincha.stf.entity.SolicitudCredito;
+import com.pichincha.stf.entity.to.SolicitudCreditoTo;
 import com.pichincha.stf.service.RespuestaServicio;
-import com.pichincha.stf.service.VehiculoServicio;
+import com.pichincha.stf.service.SolicitudCreditoServicio;
 import com.pichincha.stf.service.exception.CreditoAutomotrizException;
 
-@RestController
-@RequestMapping("/vehiculo")
-public class VehiculoContoller {
+/**
+ *
+ */
 
-	private static final Logger log = LoggerFactory.getLogger(VehiculoContoller.class);
+@RestController
+@RequestMapping("/solicitudCredito")
+public class SolicitudCreditoController {
+
+	private static final Logger log = LoggerFactory.getLogger(SolicitudCreditoController.class);
 
 	@Autowired
-	private VehiculoServicio vehiculoServicio;
+	private SolicitudCreditoServicio solicitudCreditoServicio;
 
 	@Autowired
 	private RespuestaServicio respuestaServicio;
 
 	@PostMapping("/guardar")
-	public ResponseEntity<RespuestaTo> guardarVehiculo(@RequestBody VehiculoTo vehiculoTo) {
-
+	public ResponseEntity<RespuestaTo> guardarSolicitudCredito(@RequestBody SolicitudCreditoTo solicitudCreditoTo) {
 		String mensaje = "";
 
 		try {
-			Vehiculo vehiculo = vehiculoServicio.guardar(vehiculoTo);
-			mensaje = "Vehículo guardado correctamente".concat(" - Placa: ".concat(vehiculo.getPlaca()));
+			SolicitudCredito solicitudCredito = solicitudCreditoServicio.guardar(solicitudCreditoTo);
+			mensaje = "Solicituda guardada correctamente"
+					.concat(" - Codigo: ".concat(solicitudCredito.getCodigoSolicitudCredito().toString()));
 			log.info(mensaje);
 			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("OK", mensaje), HttpStatus.OK);
 		} catch (CreditoAutomotrizException e) {

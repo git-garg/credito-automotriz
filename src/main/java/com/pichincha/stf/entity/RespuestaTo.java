@@ -11,8 +11,14 @@ import lombok.Data;
  */
 @Data
 public class RespuestaTo {
-	
+
 	private String respuesta;
 	private String mensaje;
-	
+
+	public RespuestaTo(String respuesta, String mensaje) {
+		super();
+		this.respuesta = respuesta;
+		this.mensaje = mensaje;
+	}
+
 }

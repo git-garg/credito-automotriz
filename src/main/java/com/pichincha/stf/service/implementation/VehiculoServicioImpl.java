@@ -1,4 +1,4 @@
-package com.pichincha.stf.service;
+package com.pichincha.stf.service.implementation;
 
 import javax.validation.ConstraintViolationException;
 
@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.pichincha.stf.entity.Marca;
 import com.pichincha.stf.entity.Vehiculo;
-import com.pichincha.stf.entity.VehiculoTo;
+import com.pichincha.stf.entity.enumeration.EstadoVehiculoEnum;
+import com.pichincha.stf.entity.to.VehiculoTo;
 import com.pichincha.stf.respository.MarcaRepository;
 import com.pichincha.stf.respository.VehiculoRepository;
+import com.pichincha.stf.service.VehiculoServicio;
 import com.pichincha.stf.service.exception.CreditoAutomotrizException;
 
 @Service
@@ -39,10 +41,9 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 				try {
 					return this.guardar(vehiculo);
 				} catch (ConstraintViolationException e) {
-					throw new CreditoAutomotrizException("No se pudo guarda el registro. Placa: "
-							+ vehiculo.getPlaca().concat(" Error: ".concat(e.getMessage())));
+					throw new CreditoAutomotrizException(
+							"No se pudo guardar el registro.".concat(" Error: ".concat(e.getMessage())));
 				}
-
 			}
 		}
 
@@ -53,6 +54,7 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 	}
 
 	public Vehiculo guardar(Vehiculo vehiculo) {
+		vehiculo.setEstadoVehiculo(EstadoVehiculoEnum.DISPONIBLE);
 		Vehiculo vehiculoAlmacenado = vehiculoRepository.save(vehiculo);
 		return vehiculoAlmacenado;
 	}

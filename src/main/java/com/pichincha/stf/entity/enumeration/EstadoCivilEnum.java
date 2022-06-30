@@ -2,7 +2,7 @@
  * Clase: EstadoCivilEnum.java
  * Fecha: 27 jun. 2022
  */
-package com.pichincha.stf.entity;
+package com.pichincha.stf.entity.enumeration;
 
 import java.util.Arrays;
 
