@@ -44,6 +44,8 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 		Vehiculo vehiculoConsultado = obtenerVehiculoPorPlaca(placa);
 		if (null == vehiculoConsultado) {
 			throw new CreditoAutomotrizException("No existe un vehiculo con placa: ".concat(placa));
+		} else if (!vehiculoConsultado.getEstadoVehiculo().equals(EstadoVehiculoEnum.DISPONIBLE)) {
+			throw new CreditoAutomotrizException("El vehiculo esta comprometido.".concat(placa));
 		} else {
 			VehiculoTo vehiculoToModificado = new VehiculoTo();
 			Vehiculo obtenerVehiculoModificado = obtenerVehiculoModificado(vehiculoConsultado,
@@ -107,6 +109,16 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 	@Override
 	public List<VehiculoTo> obtenerVehiculosPorMarca(Marca marca) {
 		return vehiculoRepository.obtenerVehiculosPorMarca(marca).orElse(new ArrayList<>());
+	}
+
+	@Override
+	public List<VehiculoTo> obtenerVehiculosPorModelo(String modelo) {
+		return vehiculoRepository.obtenerVehiculosPorModelo(modelo).orElse(new ArrayList<>());
+	}
+
+	@Override
+	public List<VehiculoTo> obtenerVehiculosPorAnio(int anio) {
+		return vehiculoRepository.obtenerVehiculosPorAnio(anio).orElse(new ArrayList<>());
 	}
 
 	public Vehiculo guardar(Vehiculo vehiculo, EstadoVehiculoEnum estadoVehiculo) {

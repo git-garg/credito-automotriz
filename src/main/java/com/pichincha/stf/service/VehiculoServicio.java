@@ -22,6 +22,10 @@ public interface VehiculoServicio {
 
 	List<VehiculoTo> obtenerVehiculosPorMarca(Marca marca);
 
+	List<VehiculoTo> obtenerVehiculosPorModelo(String modelo);
+	
+	List<VehiculoTo> obtenerVehiculosPorAnio(int anio);
+
 	void eliminarVahiculo(Vehiculo vehiculo);
 
 }

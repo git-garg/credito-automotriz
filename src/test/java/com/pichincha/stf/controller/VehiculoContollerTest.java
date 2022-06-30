@@ -30,15 +30,23 @@ public class VehiculoContollerTest {
 	@Autowired
 	private TestRestTemplate testRestTemplate;
 
+	private Vehiculo vehiculo;
+	private VehiculoTo vehiculoTo;
+	private HttpEntity<VehiculoTo> request;
+
+	public void cargarIniciales() {
+		this.vehiculo = this.obtenerVehiculo();
+		this.vehiculoTo = new VehiculoTo();
+		vehiculoTo.setVehiculo(this.vehiculo);
+		vehiculoTo.setAbreviaturaMarca("KIA");
+		this.request = new HttpEntity<>(vehiculoTo);
+	}
+
 	@Test
 	public void deberiaGuardarVehiculo() {
 
-		Vehiculo vehiculo = this.obtenerVehiculo();
-		VehiculoTo vehiculoTo = new VehiculoTo();
-		vehiculoTo.setVehiculo(vehiculo);
-		vehiculoTo.setAbreviaturaMarca("KIA");
+		cargarIniciales();
 
-		HttpEntity<VehiculoTo> request = new HttpEntity<>(vehiculoTo);
 		ResponseEntity<RespuestaTo> response = testRestTemplate.postForEntity("/vehiculo/guardar", request,
 				RespuestaTo.class);
 
@@ -47,13 +55,29 @@ public class VehiculoContollerTest {
 	}
 
 	@Test
-	public void deberiaObtenerVehiculos() {
+	public void deberiaObtenerVehiculosPorMarca() {
 
-		ResponseEntity<VehiculoTo[]> response = testRestTemplate.getForEntity("/vehiculo/buscar/KIA",
+		cargarIniciales();
+
+		ResponseEntity<VehiculoTo[]> response = testRestTemplate.getForEntity("/vehiculo/buscar/por/marca/KIA",
 				VehiculoTo[].class);
 
 		VehiculoTo[] vehiculos = response.getBody();
 		assertEquals("KIA", vehiculos[0].getVehiculo().getMarca().getAbreviatura());
+
+	}
+
+	@Test
+	public void deberiaObtenerVehiculosPorModelo() {
+		cargarIniciales();
+
+		testRestTemplate.postForEntity("/vehiculo/guardar", request, RespuestaTo.class);
+
+		ResponseEntity<VehiculoTo[]> response = testRestTemplate.getForEntity("/vehiculo/buscar/por/modelo/rio",
+				VehiculoTo[].class);
+
+		VehiculoTo[] vehiculos = response.getBody();
+		assertEquals("rio", vehiculos[0].getVehiculo().getModelo());
 
 	}
 
@@ -63,10 +87,10 @@ public class VehiculoContollerTest {
 		vehiculo.setCilindraje("1200");
 		vehiculo.setCodigoVehiculo(2L);
 		vehiculo.setEstadoVehiculo(EstadoVehiculoEnum.DISPONIBLE);
-		vehiculo.setModelo("Sportage");
+		vehiculo.setModelo("rio");
 		vehiculo.setNumeroChasis("POIUYGBHNM");
 		vehiculo.setPlaca("PDK9841");
-		vehiculo.setModelo("Rio");
+		vehiculo.setAnio(2020);
 		return vehiculo;
 	}
 

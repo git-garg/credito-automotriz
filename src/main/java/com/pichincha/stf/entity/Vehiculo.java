@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.pichincha.stf.entity.enumeration.EstadoVehiculoEnum;
 
@@ -52,10 +53,16 @@ public class Vehiculo {
 	private String tipo;
 
 	@Column
+	@NotEmpty(message = "El campo cilindraje es obligatorio")
 	private String cilindraje;
 
 	@Column
+	@NotNull(message = "El campo avaluo es obligatorio")
 	private BigDecimal avaluo;
+
+	@Column
+	@NotNull(message = "El campo anio es obligatorio")
+	private Integer anio;
 
 	@ManyToOne
 	@JoinColumn(name = "codigo_marca", nullable = false)

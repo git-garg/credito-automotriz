@@ -23,4 +23,10 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
 	@Query(" SELECT new com.pichincha.stf.entity.to.VehiculoTo(v, v.marca.abreviatura) FROM Vehiculo v WHERE v.marca = :marca ")
 	Optional<List<VehiculoTo>> obtenerVehiculosPorMarca(@Param("marca") Marca marca);
 
+	@Query(" SELECT new com.pichincha.stf.entity.to.VehiculoTo(v, v.marca.abreviatura) FROM Vehiculo v WHERE v.modelo = :modelo")
+	Optional<List<VehiculoTo>> obtenerVehiculosPorModelo(@Param("modelo") String modelo);
+	
+	@Query(" SELECT new com.pichincha.stf.entity.to.VehiculoTo(v, v.marca.abreviatura) FROM Vehiculo v WHERE v.anio = :anio")
+	Optional<List<VehiculoTo>> obtenerVehiculosPorAnio(@Param("anio") int anio);
+
 }

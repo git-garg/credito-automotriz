@@ -66,7 +66,7 @@ public class VehiculoContoller {
 		if (null == vehiculo) {
 			mensaje = "No existe vehículo o esta comprometido. Placa: ".concat(" - Placa: ".concat(placa));
 			log.info(mensaje);
-			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("OK", mensaje), HttpStatus.OK);
+			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("ERR", mensaje), HttpStatus.OK);
 		} else {
 			vehiculoServicio.eliminarVahiculo(vehiculo);
 			mensaje = "Vehículo eliminado correctamente".concat(" - Placa: ".concat(vehiculo.getPlaca()));
@@ -93,10 +93,22 @@ public class VehiculoContoller {
 		}
 	}
 
-	@GetMapping("/buscar/{abreviaturaMarca}")
+	@GetMapping("/buscar/por/marca/{abreviaturaMarca}")
 	public ResponseEntity<List<VehiculoTo>> bucarPorMarca(@PathVariable String abreviaturaMarca) {
 		Marca marca = marcaServicio.obtenerMarcaPorAbreviatura(abreviaturaMarca);
 		List<VehiculoTo> listaVehiculoTo = vehiculoServicio.obtenerVehiculosPorMarca(marca);
+		return new ResponseEntity(listaVehiculoTo, HttpStatus.OK);
+	}
+	
+	@GetMapping("/buscar/por/modelo/{modelo}")
+	public ResponseEntity<List<VehiculoTo>> bucarPorModelo(@PathVariable String modelo) {
+		List<VehiculoTo> listaVehiculoTo = vehiculoServicio.obtenerVehiculosPorModelo(modelo);
+		return new ResponseEntity(listaVehiculoTo, HttpStatus.OK);
+	}
+	
+	@GetMapping("/buscar/por/anio/{anio}")
+	public ResponseEntity<List<VehiculoTo>> bucarPorAnio(@PathVariable int anio) {
+		List<VehiculoTo> listaVehiculoTo = vehiculoServicio.obtenerVehiculosPorAnio(anio);
 		return new ResponseEntity(listaVehiculoTo, HttpStatus.OK);
 	}
 
