@@ -60,6 +60,11 @@ public class MarcaServicioImpl implements MarcaServicio {
 
 	}
 
+	@Override
+	public Marca obtenerMarcaPorAbreviatura(String abreviatura) {
+		return marcaRepository.findByAbreviatura(abreviatura);
+	}
+
 	private Marca obtenerMarca(String[] registroCsv) {
 		Marca marca = new Marca();
 		marca.setNombre(registroCsv[0]);

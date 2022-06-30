@@ -14,5 +14,4 @@ import com.pichincha.stf.entity.Marca;
 public interface MarcaRepository extends JpaRepository<Marca, Long> {
 
 	Marca findByAbreviatura(String abreviatura);
-	
 }

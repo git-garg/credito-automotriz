@@ -1,5 +1,8 @@
 package com.pichincha.stf.service;
 
+import java.util.List;
+
+import com.pichincha.stf.entity.Marca;
 import com.pichincha.stf.entity.Vehiculo;
 import com.pichincha.stf.entity.enumeration.EstadoVehiculoEnum;
 import com.pichincha.stf.entity.to.VehiculoTo;
@@ -14,8 +17,10 @@ public interface VehiculoServicio {
 	Vehiculo obtenerPorPlacaEstado(String placa, EstadoVehiculoEnum estadoVehiculo);
 
 	Vehiculo guardarVehiculo(Vehiculo vehiculo);
-	
+
 	Vehiculo obtenerVehiculoPorPlaca(String placa);
+
+	List<VehiculoTo> obtenerVehiculosPorMarca(Marca marca);
 
 	void eliminarVahiculo(Vehiculo vehiculo);
 

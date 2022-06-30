@@ -1,5 +1,8 @@
 package com.pichincha.stf.service.implementation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +12,8 @@ import com.pichincha.stf.entity.Marca;
 import com.pichincha.stf.entity.Vehiculo;
 import com.pichincha.stf.entity.enumeration.EstadoVehiculoEnum;
 import com.pichincha.stf.entity.to.VehiculoTo;
-import com.pichincha.stf.respository.MarcaRepository;
 import com.pichincha.stf.respository.VehiculoRepository;
+import com.pichincha.stf.service.MarcaServicio;
 import com.pichincha.stf.service.VehiculoServicio;
 import com.pichincha.stf.service.exception.CreditoAutomotrizException;
 
@@ -21,7 +24,7 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 	private VehiculoRepository vehiculoRepository;
 
 	@Autowired
-	private MarcaRepository marcaRepository;
+	private MarcaServicio marcaServicio;
 
 	@Override
 	public Vehiculo guardarAPartirDeTo(VehiculoTo vehiculoTo) throws CreditoAutomotrizException {
@@ -40,10 +43,12 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 		String placa = vehiculoTo.getVehiculo().getPlaca();
 		Vehiculo vehiculoConsultado = obtenerVehiculoPorPlaca(placa);
 		if (null == vehiculoConsultado) {
-			throw new CreditoAutomotrizException("Ya existe un vehiculo con placa: ".concat(placa));
+			throw new CreditoAutomotrizException("No existe un vehiculo con placa: ".concat(placa));
 		} else {
 			VehiculoTo vehiculoToModificado = new VehiculoTo();
-			vehiculoToModificado.setVehiculo(obtenerVehiculoModificado(vehiculoConsultado, vehiculoTo.getVehiculo()));
+			Vehiculo obtenerVehiculoModificado = obtenerVehiculoModificado(vehiculoConsultado,
+					vehiculoTo.getVehiculo());
+			vehiculoToModificado.setVehiculo(obtenerVehiculoModificado);
 			vehiculoToModificado.setAbreviaturaMarca(vehiculoTo.getAbreviaturaMarca());
 			return verificarMarcaYGuardar(vehiculoToModificado);
 		}
@@ -64,7 +69,7 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 	private Vehiculo verificarMarcaYGuardar(VehiculoTo vehiculoTo) throws CreditoAutomotrizException {
 		Vehiculo vehiculo = vehiculoTo.getVehiculo();
 		String abreviaturaMarca = vehiculoTo.getAbreviaturaMarca();
-		Marca marca = marcaRepository.findByAbreviatura(abreviaturaMarca);
+		Marca marca = marcaServicio.obtenerMarcaPorAbreviatura(abreviaturaMarca);
 
 		if (null == marca) {
 			throw new CreditoAutomotrizException("No existe marca para: " + abreviaturaMarca);
@@ -97,6 +102,11 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 	@Override
 	public Vehiculo obtenerVehiculoPorPlaca(String placa) {
 		return vehiculoRepository.findByPlaca(placa);
+	}
+
+	@Override
+	public List<VehiculoTo> obtenerVehiculosPorMarca(Marca marca) {
+		return vehiculoRepository.obtenerVehiculosPorMarca(marca).orElse(new ArrayList<>());
 	}
 
 	public Vehiculo guardar(Vehiculo vehiculo, EstadoVehiculoEnum estadoVehiculo) {
