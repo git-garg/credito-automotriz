@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pichincha.stf.entity.RespuestaTo;
@@ -50,8 +50,8 @@ public class VehiculoContoller {
 		}
 	}
 
-	@DeleteMapping("/eliminar/{placa}")
-	public ResponseEntity<RespuestaTo> eliminarCliente(@PathVariable String placa) {
+	@DeleteMapping("/eliminar")
+	public ResponseEntity<RespuestaTo> eliminarCliente(@RequestParam String placa) {
 		String mensaje = "";
 		Vehiculo vehiculo = vehiculoServicio.obtenerPorPlacaEstado(placa, EstadoVehiculoEnum.DISPONIBLE);
 		if (null == vehiculo) {
@@ -63,6 +63,24 @@ public class VehiculoContoller {
 			mensaje = "Vehículo eliminado correctamente".concat(" - Placa: ".concat(vehiculo.getPlaca()));
 			log.info(mensaje);
 			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("OK", mensaje), HttpStatus.OK);
+		}
+	}
+
+	@PostMapping("/actualizar")
+	public ResponseEntity<RespuestaTo> actualizarCliente(@RequestBody VehiculoTo vehiculoTo) {
+		String mensaje = "";
+
+		try {
+			vehiculoServicio.actualizarAPartirDeTo(vehiculoTo);
+			mensaje = "Vehículo actualizado correctamente"
+					.concat(" - Placa: ".concat(vehiculoTo.getVehiculo().getPlaca()));
+			log.info(mensaje);
+			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("OK", mensaje), HttpStatus.OK);
+		} catch (CreditoAutomotrizException e) {
+			mensaje = "No se pudo actualizar el vehíulo. Placa: ".concat(vehiculoTo.getVehiculo().getPlaca())
+					.concat(". Error: ").concat(e.getMessage());
+			log.info(mensaje);
+			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("ERR", mensaje), HttpStatus.OK);
 		}
 	}
 

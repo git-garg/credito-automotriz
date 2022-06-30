@@ -60,7 +60,7 @@ public class SolicitudCreditoServicioImpl implements SolicitudCreditoServicio {
 		if (null != solicitudCreditoAlmacenada.getCodigoSolicitudCredito()) {
 			Vehiculo vehiculo = solicitudCreditoAlmacenada.getVehiculo();
 			vehiculo.setEstadoVehiculo(EstadoVehiculoEnum.COMPROMETIDO);
-			vehiculoServicio.actualizarVehiculo(vehiculo);
+			vehiculoServicio.guardarVehiculo(vehiculo);
 		}
 		return solicitudCreditoAlmacenada;
 	}

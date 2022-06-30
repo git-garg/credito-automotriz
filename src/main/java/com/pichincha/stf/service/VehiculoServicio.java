@@ -9,9 +9,13 @@ public interface VehiculoServicio {
 
 	Vehiculo guardarAPartirDeTo(VehiculoTo vehiculoTo) throws CreditoAutomotrizException;
 
+	Vehiculo actualizarAPartirDeTo(VehiculoTo vehiculoTo) throws CreditoAutomotrizException;
+
 	Vehiculo obtenerPorPlacaEstado(String placa, EstadoVehiculoEnum estadoVehiculo);
 
-	void actualizarVehiculo(Vehiculo vehiculo);
+	Vehiculo guardarVehiculo(Vehiculo vehiculo);
+	
+	Vehiculo obtenerVehiculoPorPlaca(String placa);
 
 	void eliminarVahiculo(Vehiculo vehiculo);
 

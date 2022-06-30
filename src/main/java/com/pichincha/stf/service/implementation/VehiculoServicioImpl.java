@@ -30,23 +30,53 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 			throw new CreditoAutomotrizException(
 					"Ya existe un vehiculo con placa: " + vehiculoTo.getVehiculo().getPlaca());
 		} else {
-			Vehiculo vehiculo = vehiculoTo.getVehiculo();
-			String abreviaturaMarca = vehiculoTo.getAbreviaturaMarca();
-			Marca marca = marcaRepository.findByAbreviatura(abreviaturaMarca);
-
-			if (null == marca) {
-				throw new CreditoAutomotrizException("No existe marca para: " + abreviaturaMarca);
-			} else {
-				vehiculo.setMarca(marca);
-				try {
-					return this.guardar(vehiculo);
-				} catch (ConstraintViolationException e) {
-					throw new CreditoAutomotrizException(
-							"No se pudo guardar el registro.".concat(" Error: ".concat(e.getMessage())));
-				}
-			}
+			return verificarMarcaYGuardar(vehiculoTo);
 		}
 
+	}
+
+	@Override
+	public Vehiculo actualizarAPartirDeTo(VehiculoTo vehiculoTo) throws CreditoAutomotrizException {
+		String placa = vehiculoTo.getVehiculo().getPlaca();
+		Vehiculo vehiculoConsultado = obtenerVehiculoPorPlaca(placa);
+		if (null == vehiculoConsultado) {
+			throw new CreditoAutomotrizException("Ya existe un vehiculo con placa: ".concat(placa));
+		} else {
+			VehiculoTo vehiculoToModificado = new VehiculoTo();
+			vehiculoToModificado.setVehiculo(obtenerVehiculoModificado(vehiculoConsultado, vehiculoTo.getVehiculo()));
+			vehiculoToModificado.setAbreviaturaMarca(vehiculoTo.getAbreviaturaMarca());
+			return verificarMarcaYGuardar(vehiculoToModificado);
+		}
+
+	}
+
+	private Vehiculo obtenerVehiculoModificado(Vehiculo vehiculoConsultado, Vehiculo vehiculoModificado) {
+		vehiculoConsultado.setAvaluo(vehiculoModificado.getAvaluo());
+		vehiculoConsultado.setCilindraje(vehiculoModificado.getCilindraje());
+		vehiculoConsultado.setEstadoVehiculo(vehiculoModificado.getEstadoVehiculo());
+		vehiculoModificado.setModelo(vehiculoModificado.getModelo());
+		vehiculoModificado.setNumeroChasis(vehiculoModificado.getNumeroChasis());
+		vehiculoModificado.setPlaca(vehiculoModificado.getPlaca());
+		vehiculoModificado.setTipo(vehiculoModificado.getTipo());
+		return vehiculoConsultado;
+	}
+
+	private Vehiculo verificarMarcaYGuardar(VehiculoTo vehiculoTo) throws CreditoAutomotrizException {
+		Vehiculo vehiculo = vehiculoTo.getVehiculo();
+		String abreviaturaMarca = vehiculoTo.getAbreviaturaMarca();
+		Marca marca = marcaRepository.findByAbreviatura(abreviaturaMarca);
+
+		if (null == marca) {
+			throw new CreditoAutomotrizException("No existe marca para: " + abreviaturaMarca);
+		} else {
+			vehiculo.setMarca(marca);
+			try {
+				return this.guardar(vehiculo, EstadoVehiculoEnum.DISPONIBLE);
+			} catch (ConstraintViolationException e) {
+				throw new CreditoAutomotrizException(
+						"No se pudo guardar el registro.".concat(" Error: ".concat(e.getMessage())));
+			}
+		}
 	}
 
 	@Override
@@ -55,23 +85,28 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 	}
 
 	@Override
-	public void actualizarVehiculo(Vehiculo vehiculo) {
-		vehiculoRepository.save(vehiculo);
-	}
-
-	@Override
 	public void eliminarVahiculo(Vehiculo vehiculo) {
 		vehiculoRepository.delete(vehiculo);
 	}
 
-	public Vehiculo guardar(Vehiculo vehiculo) {
-		vehiculo.setEstadoVehiculo(EstadoVehiculoEnum.DISPONIBLE);
-		Vehiculo vehiculoAlmacenado = vehiculoRepository.save(vehiculo);
+	@Override
+	public Vehiculo guardarVehiculo(Vehiculo vehiculo) {
+		return vehiculoRepository.save(vehiculo);
+	}
+
+	@Override
+	public Vehiculo obtenerVehiculoPorPlaca(String placa) {
+		return vehiculoRepository.findByPlaca(placa);
+	}
+
+	public Vehiculo guardar(Vehiculo vehiculo, EstadoVehiculoEnum estadoVehiculo) {
+		vehiculo.setEstadoVehiculo(estadoVehiculo);
+		Vehiculo vehiculoAlmacenado = guardarVehiculo(vehiculo);
 		return vehiculoAlmacenado;
 	}
 
 	private boolean existeVehiculo(VehiculoTo vehiculoTo) {
-		return null != vehiculoRepository.findByPlaca(vehiculoTo.getVehiculo().getPlaca());
+		return null != obtenerVehiculoPorPlaca(vehiculoTo.getVehiculo().getPlaca());
 	}
 
 }
