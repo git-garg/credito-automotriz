@@ -24,7 +24,7 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 	private MarcaRepository marcaRepository;
 
 	@Override
-	public Vehiculo guardar(VehiculoTo vehiculoTo) throws CreditoAutomotrizException {
+	public Vehiculo guardarAPartirDeTo(VehiculoTo vehiculoTo) throws CreditoAutomotrizException {
 
 		if (existeVehiculo(vehiculoTo)) {
 			throw new CreditoAutomotrizException(
@@ -49,14 +49,29 @@ public class VehiculoServicioImpl implements VehiculoServicio {
 
 	}
 
-	private boolean existeVehiculo(VehiculoTo vehiculoTo) {
-		return null != vehiculoRepository.findByPlaca(vehiculoTo.getVehiculo().getPlaca());
+	@Override
+	public Vehiculo obtenerPorPlacaEstado(String placa, EstadoVehiculoEnum estadoVehiculo) {
+		return vehiculoRepository.obtenerPorPlacaEstado(placa, estadoVehiculo);
+	}
+
+	@Override
+	public void actualizarVehiculo(Vehiculo vehiculo) {
+		vehiculoRepository.save(vehiculo);
+	}
+
+	@Override
+	public void eliminarVahiculo(Vehiculo vehiculo) {
+		vehiculoRepository.delete(vehiculo);
 	}
 
 	public Vehiculo guardar(Vehiculo vehiculo) {
 		vehiculo.setEstadoVehiculo(EstadoVehiculoEnum.DISPONIBLE);
 		Vehiculo vehiculoAlmacenado = vehiculoRepository.save(vehiculo);
 		return vehiculoAlmacenado;
+	}
+
+	private boolean existeVehiculo(VehiculoTo vehiculoTo) {
+		return null != vehiculoRepository.findByPlaca(vehiculoTo.getVehiculo().getPlaca());
 	}
 
 }

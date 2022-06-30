@@ -75,6 +75,11 @@ public class EjecutivoServicioImpl implements EjecutivoServicio {
 		}
 	}
 
+	@Override
+	public Ejecutivo obtenerPorIdentificacion(String identificacionEjecutivo) {
+		return ejecutivoRepository.obtenerPorIdentificacion(identificacionEjecutivo);
+	}
+
 	private Patio obtenerPatioPorNumero(String[] registroCsv) throws CreditoAutomotrizException {
 		String numeroPuntoVenta = registroCsv[7];
 

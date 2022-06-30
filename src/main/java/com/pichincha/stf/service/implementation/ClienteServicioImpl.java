@@ -70,6 +70,11 @@ public class ClienteServicioImpl implements ClienteServicio {
 		}
 	}
 
+	@Override
+	public Cliente obtenerPorIdentificacion(String identificacionCliente) {
+		return clienteRepository.obtenerPorIdentificacion(identificacionCliente);
+	}
+
 	/**
 	 * Conviete un arreglo de String en objeto Cliente
 	 * 

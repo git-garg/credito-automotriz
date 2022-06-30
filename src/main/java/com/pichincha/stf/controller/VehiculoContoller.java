@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pichincha.stf.entity.RespuestaTo;
 import com.pichincha.stf.entity.Vehiculo;
+import com.pichincha.stf.entity.enumeration.EstadoVehiculoEnum;
 import com.pichincha.stf.entity.to.VehiculoTo;
 import com.pichincha.stf.service.RespuestaServicio;
 import com.pichincha.stf.service.VehiculoServicio;
@@ -35,7 +38,7 @@ public class VehiculoContoller {
 		String mensaje = "";
 
 		try {
-			Vehiculo vehiculo = vehiculoServicio.guardar(vehiculoTo);
+			Vehiculo vehiculo = vehiculoServicio.guardarAPartirDeTo(vehiculoTo);
 			mensaje = "Vehículo guardado correctamente".concat(" - Placa: ".concat(vehiculo.getPlaca()));
 			log.info(mensaje);
 			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("OK", mensaje), HttpStatus.OK);
@@ -44,6 +47,22 @@ public class VehiculoContoller {
 			log.error(mensaje);
 			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("ERR", mensaje), HttpStatus.OK);
 
+		}
+	}
+
+	@DeleteMapping("/eliminar/{placa}")
+	public ResponseEntity<RespuestaTo> eliminarCliente(@PathVariable String placa) {
+		String mensaje = "";
+		Vehiculo vehiculo = vehiculoServicio.obtenerPorPlacaEstado(placa, EstadoVehiculoEnum.DISPONIBLE);
+		if (null == vehiculo) {
+			mensaje = "No existe vehículo o esta comprometido. Placa: ".concat(" - Placa: ".concat(placa));
+			log.info(mensaje);
+			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("OK", mensaje), HttpStatus.OK);
+		} else {
+			vehiculoServicio.eliminarVahiculo(vehiculo);
+			mensaje = "Vehículo eliminado correctamente".concat(" - Placa: ".concat(vehiculo.getPlaca()));
+			log.info(mensaje);
+			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("OK", mensaje), HttpStatus.OK);
 		}
 	}
 

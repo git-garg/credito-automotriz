@@ -17,12 +17,12 @@ import com.pichincha.stf.entity.Vehiculo;
 import com.pichincha.stf.entity.enumeration.EstadoSolicitudEnum;
 import com.pichincha.stf.entity.enumeration.EstadoVehiculoEnum;
 import com.pichincha.stf.entity.to.SolicitudCreditoTo;
-import com.pichincha.stf.respository.ClienteRepository;
-import com.pichincha.stf.respository.EjecutivoRepository;
-import com.pichincha.stf.respository.PatioRepository;
 import com.pichincha.stf.respository.SolicitudCreditoRepository;
-import com.pichincha.stf.respository.VehiculoRepository;
+import com.pichincha.stf.service.ClienteServicio;
+import com.pichincha.stf.service.EjecutivoServicio;
+import com.pichincha.stf.service.PatioServicio;
 import com.pichincha.stf.service.SolicitudCreditoServicio;
+import com.pichincha.stf.service.VehiculoServicio;
 import com.pichincha.stf.service.exception.CreditoAutomotrizException;
 
 /**
@@ -36,16 +36,16 @@ public class SolicitudCreditoServicioImpl implements SolicitudCreditoServicio {
 	private SolicitudCreditoRepository solicitudCreditoRepository;
 
 	@Autowired
-	private ClienteRepository clienteRepository;
+	private ClienteServicio clienteServicio;
 
 	@Autowired
-	private EjecutivoRepository ejecutivoRepository;
+	private EjecutivoServicio ejecutivoServicio;
 
 	@Autowired
-	private PatioRepository patioRepository;
+	private PatioServicio patioServicio;
 
 	@Autowired
-	private VehiculoRepository vehiculoRepository;
+	private VehiculoServicio vehiculoServicio;
 
 	private String mensajeError = "";
 
@@ -56,7 +56,13 @@ public class SolicitudCreditoServicioImpl implements SolicitudCreditoServicio {
 		solicitudCredito.setEstadoSolicitud(EstadoSolicitudEnum.REGISTRADA);
 		solicitudCredito.setFechaElaboracion(LocalDate.now());
 
-		return solicitudCreditoRepository.save(solicitudCredito);
+		SolicitudCredito solicitudCreditoAlmacenada = solicitudCreditoRepository.save(solicitudCredito);
+		if (null != solicitudCreditoAlmacenada.getCodigoSolicitudCredito()) {
+			Vehiculo vehiculo = solicitudCreditoAlmacenada.getVehiculo();
+			vehiculo.setEstadoVehiculo(EstadoVehiculoEnum.COMPROMETIDO);
+			vehiculoServicio.actualizarVehiculo(vehiculo);
+		}
+		return solicitudCreditoAlmacenada;
 	}
 
 	private SolicitudCredito obtenerSolicitudCredito(SolicitudCreditoTo solicitudCreditoTo)
@@ -73,7 +79,7 @@ public class SolicitudCreditoServicioImpl implements SolicitudCreditoServicio {
 	}
 
 	private Ejecutivo obtenerEjecutivo(String identificacionEjecutivo) throws CreditoAutomotrizException {
-		Ejecutivo ejecutivo = ejecutivoRepository.obtenerPorIdentificacion(identificacionEjecutivo);
+		Ejecutivo ejecutivo = ejecutivoServicio.obtenerPorIdentificacion(identificacionEjecutivo);
 		this.mensajeError = "No existe ejecutivo para la identificacion: ";
 		verificarRegistro(identificacionEjecutivo, ejecutivo, mensajeError);
 		return ejecutivo;
@@ -81,21 +87,21 @@ public class SolicitudCreditoServicioImpl implements SolicitudCreditoServicio {
 
 	private Vehiculo obtenerVehiculo(String placa, EstadoVehiculoEnum estadoVehiculo)
 			throws CreditoAutomotrizException {
-		Vehiculo vehiculo = vehiculoRepository.obtenerPorPlacaEstado(placa, estadoVehiculo);
+		Vehiculo vehiculo = vehiculoServicio.obtenerPorPlacaEstado(placa, estadoVehiculo);
 		this.mensajeError = "No existe vehículo o esta comprometido. Placa: ";
 		verificarRegistro(placa, vehiculo, mensajeError);
 		return vehiculo;
 	}
 
 	private Patio obtenerPunto(String numeroPuntoVenta) throws CreditoAutomotrizException {
-		Patio patio = patioRepository.obtenerPorNumeroPuntoVenta(numeroPuntoVenta);
+		Patio patio = patioServicio.obtenerPorNumeroPuntoVenta(numeroPuntoVenta);
 		this.mensajeError = "No existe punto de venta para: ";
 		verificarRegistro(numeroPuntoVenta, patio, mensajeError);
 		return patio;
 	}
 
 	private Cliente obtenerCliente(String identificacionCliente) throws CreditoAutomotrizException {
-		Cliente cliente = clienteRepository.obtenerPorIdentificacion(identificacionCliente);
+		Cliente cliente = clienteServicio.obtenerPorIdentificacion(identificacionCliente);
 		this.mensajeError = "No existe ejecutivo para la identificacion: ";
 		verificarRegistro(identificacionCliente, cliente, mensajeError);
 		return cliente;

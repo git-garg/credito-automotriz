@@ -33,6 +33,11 @@ public class PatioServicioImpl implements PatioServicio {
 
 	}
 
+	@Override
+	public Patio obtenerPorNumeroPuntoVenta(String numeroPuntoVenta) {
+		return patioRepository.obtenerPorNumeroPuntoVenta(numeroPuntoVenta);
+	}
+
 	private Patio obtenerPatio(String nombre, String direccion, String telefono, String numeroPuntoVenta) {
 		Patio patio = new Patio();
 		patio.setNombre(nombre);

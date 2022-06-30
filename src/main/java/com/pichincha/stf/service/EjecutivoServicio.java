@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import com.opencsv.exceptions.CsvException;
+import com.pichincha.stf.entity.Ejecutivo;
 import com.pichincha.stf.service.exception.ClienteException;
 import com.pichincha.stf.service.exception.CreditoAutomotrizException;
 
@@ -15,6 +16,8 @@ import com.pichincha.stf.service.exception.CreditoAutomotrizException;
  *
  */
 public interface EjecutivoServicio {
+
+	Ejecutivo obtenerPorIdentificacion(String identificacionEjecutivo);
 
 	void cargarEjecutivos(String ruta, String archivo)
 			throws IOException, URISyntaxException, CsvException, ClienteException, CreditoAutomotrizException;
