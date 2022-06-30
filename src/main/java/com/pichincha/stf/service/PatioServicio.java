@@ -11,7 +11,7 @@ import com.pichincha.stf.entity.Patio;
  */
 public interface PatioServicio {
 	
-	void cargarPatios();
+	Long cargarPatios();
 
 	Patio obtenerPorNumeroPuntoVenta(String numeroPuntoVenta);
 	

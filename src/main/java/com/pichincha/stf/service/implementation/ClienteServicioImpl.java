@@ -9,15 +9,19 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.opencsv.exceptions.CsvException;
+import com.pichincha.stf.controller.ClienteController;
 import com.pichincha.stf.entity.Cliente;
 import com.pichincha.stf.entity.enumeration.EstadoCivilEnum;
 import com.pichincha.stf.entity.enumeration.SiNoEnum;
+import com.pichincha.stf.entity.to.ClienteTo;
 import com.pichincha.stf.respository.ClienteRepository;
 import com.pichincha.stf.service.ClienteServicio;
 import com.pichincha.stf.service.ProcesadorCsvServicio;
@@ -31,6 +35,8 @@ import com.pichincha.stf.util.Util;
 @Service
 public class ClienteServicioImpl implements ClienteServicio {
 
+	private static final long CERO = 0L;
+
 	private static final Logger log = LoggerFactory.getLogger(ClienteServicioImpl.class);
 
 	@Autowired
@@ -43,7 +49,7 @@ public class ClienteServicioImpl implements ClienteServicio {
 	 * Carga los clientes a partir de un archivo csv
 	 */
 	@Override
-	public void cargarClientes(String ruta, String archivo) throws IOException, URISyntaxException, CsvException {
+	public Long cargarClientes(String ruta, String archivo) throws IOException, URISyntaxException, CsvException {
 
 		List<String[]> registrosArchivoCsv = procesadorCsvServicio.obtenerRegistrosArchivoCsv(ruta, archivo);
 		int posicionColumnaIdentificaion = 0;
@@ -61,18 +67,54 @@ public class ClienteServicioImpl implements ClienteServicio {
 				}
 			});
 
-			log.info("Total clientes ingresados: " + clienteRepository.count());
+			long totalClientes = clienteRepository.count();
+			log.info("Total clientes ingresados: " + totalClientes);
 			clienteRepository.findAll().forEach(cliente -> log.info("Identificacion: " + cliente.getIdentificacion()));
+			return totalClientes;
 		} else {
 			log.error("Existen clientes duplicados");
 			duplicados.stream().forEach(
 					duplicado -> log.error("Identificacion duplicada: " + duplicado[posicionColumnaIdentificaion]));
+			return CERO;
 		}
 	}
 
 	@Override
 	public Cliente obtenerPorIdentificacion(String identificacionCliente) {
 		return clienteRepository.obtenerPorIdentificacion(identificacionCliente);
+	}
+
+	@Override
+	public Cliente guardarClienteDesdeTo(ClienteTo clienteTo) throws CreditoAutomotrizException {
+		Cliente cliente = clienteTo.getCliente();
+		String identificacion = cliente.getIdentificacion();
+		Cliente clienteConsultado = clienteRepository.obtenerPorIdentificacion(identificacion);
+		if (null == clienteConsultado) {
+			try {
+				return clienteRepository.save(cliente);
+			} catch (ConstraintViolationException e) {
+				throw new CreditoAutomotrizException(e.getMessage());
+			}
+		} else {
+			throw new CreditoAutomotrizException("Ya existe un cliente con identificacion: ".concat(identificacion));
+		}
+
+	}
+
+	@Override
+	public Cliente actualizarClienteDesdeTo(ClienteTo clienteTo) throws CreditoAutomotrizException {
+		String identificacionCliente = clienteTo.getCliente().getIdentificacion();
+		Cliente clienteConsultado = obtenerClientePorIdentificacion(identificacionCliente);
+		if (null == clienteConsultado) {
+			throw new CreditoAutomotrizException(
+					"No existe cliente con la identificacion: ".concat(identificacionCliente));
+		} else {
+		}
+		return null;
+	}
+
+	private Cliente obtenerClientePorIdentificacion(String identificacion) {
+		return clienteRepository.obtenerPorIdentificacion(identificacion);
 	}
 
 	/**

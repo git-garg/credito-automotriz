@@ -21,16 +21,18 @@ public class PatioServicioImpl implements PatioServicio {
 	private PatioRepository patioRepository;
 
 	@Override
-	public void cargarPatios() {
+	public Long cargarPatios() {
 
 		patioRepository.save(obtenerPatio("Pase San Francisco", "Cumbaya", "022856321", "123"));
 		patioRepository.save(obtenerPatio("Carrión", "Santa Clara", "022856852", "456"));
 		patioRepository.save(obtenerPatio("Condado", "Condado Shoping", "022856974", "789"));
 
-		log.info("Total patios cargados: " + patioRepository.count());
+		long totaPatios = patioRepository.count();
+		log.info("Total patios cargados: " + totaPatios);
 		patioRepository.findAll().stream()
 				.forEach(patio -> log.info(patio.getNombre().concat(" - ").concat(patio.getNumeroPuntoVenta())));
 
+		return totaPatios;
 	}
 
 	@Override

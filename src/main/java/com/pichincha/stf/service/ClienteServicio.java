@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 
 import com.opencsv.exceptions.CsvException;
 import com.pichincha.stf.entity.Cliente;
+import com.pichincha.stf.entity.to.ClienteTo;
 import com.pichincha.stf.service.exception.ClienteException;
 import com.pichincha.stf.service.exception.CreditoAutomotrizException;
 
@@ -17,9 +18,13 @@ import com.pichincha.stf.service.exception.CreditoAutomotrizException;
  */
 public interface ClienteServicio {
 
-	void cargarClientes(String ruta, String archivo)
+	Long cargarClientes(String ruta, String archivo)
 			throws IOException, URISyntaxException, CsvException, ClienteException, CreditoAutomotrizException;
 
 	Cliente obtenerPorIdentificacion(String identificacionCliente);
+
+	Cliente guardarClienteDesdeTo(ClienteTo clienteTo) throws CreditoAutomotrizException;
+
+	Cliente actualizarClienteDesdeTo(ClienteTo clienteTo) throws CreditoAutomotrizException;
 
 }
