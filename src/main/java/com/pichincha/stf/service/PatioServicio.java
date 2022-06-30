@@ -14,4 +14,5 @@ public interface PatioServicio {
 	void cargarPatios();
 
 	Patio obtenerPorNumeroPuntoVenta(String numeroPuntoVenta);
+	
 }

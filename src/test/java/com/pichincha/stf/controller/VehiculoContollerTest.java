@@ -22,7 +22,7 @@ import com.pichincha.stf.entity.enumeration.EstadoVehiculoEnum;
 import com.pichincha.stf.entity.to.VehiculoTo;
 
 /**
- *
+ * Clase de test para la clase VehiculoContoller
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class VehiculoContollerTest {

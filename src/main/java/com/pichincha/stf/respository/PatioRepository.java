@@ -22,5 +22,6 @@ public interface PatioRepository extends JpaRepository<Patio, Long> {
 
 	@Query("SELECT p FROM Patio p WHERE p.numeroPuntoVenta = :numeroPuntoVenta")
 	Patio obtenerPorNumeroPuntoVenta(@Param("numeroPuntoVenta") String numeroPuntoVenta);
+	
 
 }

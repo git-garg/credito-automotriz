@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.pichincha.stf.entity.enumeration.EstadoSolicitudEnum;
 
@@ -36,15 +37,19 @@ public class SolicitudCredito {
 	private Long codigoSolicitudCredito;
 
 	@Column(name = "fecha_elaboracion")
+	@NotNull(message = "El campo fecha elaboración es obligatorio")
 	private LocalDate fechaElaboracion;
 
 	@Column
+	@NotNull(message = "El campo entrada es obligatorio")
 	private BigDecimal entrada;
 
 	@Column
+	@NotNull(message = "El campo cuota es obligatorio")
 	private BigDecimal cuota;
 
 	@Column(name = "meses_plazo")
+	@NotNull(message = "El campo meses plazo es obligatorio")
 	private Integer mesesPlazo;
 
 	@Column

@@ -26,7 +26,7 @@ import com.pichincha.stf.service.exception.CreditoAutomotrizException;
  */
 
 @RestController
-@RequestMapping("/solicitudCredito")
+@RequestMapping("/solicitud/credito")
 public class SolicitudCreditoController {
 
 	private static final Logger log = LoggerFactory.getLogger(SolicitudCreditoController.class);
@@ -48,7 +48,7 @@ public class SolicitudCreditoController {
 			log.info(mensaje);
 			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("OK", mensaje), HttpStatus.OK);
 		} catch (CreditoAutomotrizException e) {
-			mensaje = "No se pudo guardar el vehíulo. Error: " + e.getMessage();
+			mensaje = "No se pudo guardar la solicitud. Error: " + e.getMessage();
 			log.error(mensaje);
 			return new ResponseEntity<RespuestaTo>(respuestaServicio.obtenerRespuestaTo("ERR", mensaje), HttpStatus.OK);
 
