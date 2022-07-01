@@ -6,6 +6,7 @@ package com.pichincha.stf.respository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +26,10 @@ public interface SolicitudCreditoRepository extends JpaRepository<SolicitudCredi
 			@Param("fechaElaboracion") LocalDate fechaElaboracion);
 
 	@Query("SELECT sc FROM SolicitudCredito sc WHERE sc.cliente = :cliente")
-	List<SolicitudCredito> obtenerSolicitudesPorCliente(@Param("cliente") Cliente cliente);
+	Optional<List<SolicitudCredito>> obtenerSolicitudesPorCliente(@Param("cliente") Cliente cliente);
 
+	@Query("SELECT sc FROM SolicitudCredito sc WHERE sc.patio.numeroPuntoVenta = :numeroPuntoVenta "
+			+ " AND sc.cliente.identificacion = :identificacion")
+	Optional<List<SolicitudCredito>> obtenerSolicitudPorNumeroPuntoVentaIdentificacion(
+			@Param("numeroPuntoVenta") String numeroPuntoVenta, @Param("identificacion") String identificacion);
 }

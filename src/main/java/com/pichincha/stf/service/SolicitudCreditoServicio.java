@@ -23,4 +23,7 @@ public interface SolicitudCreditoServicio {
 
 	List<SolicitudCredito> obtenerSolicitudesPorCliente(Cliente cliente);
 
+	List<SolicitudCredito> obtenerSolicitudPorNumeroPuntoVentaIdentificacion(String numeroPuntoVenta,
+			String identificacion);
+
 }

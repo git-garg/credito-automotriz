@@ -5,6 +5,7 @@
 package com.pichincha.stf.service.implementation;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.ConstraintViolationException;
@@ -115,7 +116,15 @@ public class SolicitudCreditoServicioImpl implements SolicitudCreditoServicio {
 
 	@Override
 	public List<SolicitudCredito> obtenerSolicitudesPorCliente(Cliente cliente) {
-		return solicitudCreditoRepository.obtenerSolicitudesPorCliente(cliente);
+		return solicitudCreditoRepository.obtenerSolicitudesPorCliente(cliente).orElse(new ArrayList<>());
+	}
+
+	@Override
+	public List<SolicitudCredito> obtenerSolicitudPorNumeroPuntoVentaIdentificacion(String numeroPuntoVenta,
+			String identificacion) {
+		return solicitudCreditoRepository
+				.obtenerSolicitudPorNumeroPuntoVentaIdentificacion(numeroPuntoVenta, identificacion)
+				.orElse(new ArrayList<>());
 	}
 
 	private SolicitudCredito obtenerSolicitudCredito(SolicitudCreditoTo solicitudCreditoTo)

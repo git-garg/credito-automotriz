@@ -22,7 +22,7 @@ public class ClienteControllerTest {
 	@Test
 	public void deberiaGuardarCliente() {
 
-		Cliente cliente = this.obtenerCliente();
+		Cliente cliente = this.obtenerCliente("1717661704");
 		ClienteTo clienteTo = new ClienteTo();
 		clienteTo.setCliente(cliente);
 		HttpEntity<ClienteTo> request = new HttpEntity<>(clienteTo);
@@ -34,9 +34,44 @@ public class ClienteControllerTest {
 
 	}
 
-	private Cliente obtenerCliente() {
+	@Test
+	private void deberiaActualizar() {
+
+		Cliente cliente = this.obtenerCliente("1818661804");
+		cliente.setApellido("Reyes");
+		ClienteTo clienteTo = new ClienteTo(cliente);
+
+		HttpEntity<ClienteTo> request = new HttpEntity<>(clienteTo);
+
+		ResponseEntity<RespuestaTo> response = testRestTemplate.postForEntity("/cliente/actualizar", request,
+				RespuestaTo.class);
+
+		assertNotNull(response.getBody().getRespuesta());
+	}
+
+	@Test
+	public void deberiaEliminar() {
+
+		Cliente cliente = this.obtenerCliente("2020662004");
+		ClienteTo clienteTo = new ClienteTo();
+		clienteTo.setCliente(cliente);
+		HttpEntity<ClienteTo> request = new HttpEntity<>(clienteTo);
+
+		ResponseEntity<RespuestaTo> response =testRestTemplate.postForEntity("/cliente/guardar", request, RespuestaTo.class);
+
+		ResponseEntity<ClienteTo> response1 = testRestTemplate.getForEntity("/cliente/buscar/2020662004",
+				ClienteTo.class);
+
+		HttpEntity<String> requestEliminar = new HttpEntity<>("2020662004");
+
+		testRestTemplate.delete("/cliente/eliminar", requestEliminar);
+
+		// assertNotNull(response.getBody().getRespuesta());
+	}
+
+	private Cliente obtenerCliente(String identificacion) {
 		Cliente cliente = new Cliente();
-		cliente.setIdentificacion("1717661704");
+		cliente.setIdentificacion(identificacion);
 		return cliente;
 	}
 
