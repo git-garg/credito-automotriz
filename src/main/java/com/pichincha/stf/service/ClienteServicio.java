@@ -27,4 +27,6 @@ public interface ClienteServicio {
 
 	Cliente actualizarClienteDesdeTo(ClienteTo clienteTo) throws CreditoAutomotrizException;
 
+	void eliminarCliente(Cliente cliente) throws CreditoAutomotrizException;
+
 }

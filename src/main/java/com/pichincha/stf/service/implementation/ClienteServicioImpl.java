@@ -17,12 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.opencsv.exceptions.CsvException;
-import com.pichincha.stf.controller.ClienteController;
 import com.pichincha.stf.entity.Cliente;
 import com.pichincha.stf.entity.enumeration.EstadoCivilEnum;
 import com.pichincha.stf.entity.enumeration.SiNoEnum;
 import com.pichincha.stf.entity.to.ClienteTo;
 import com.pichincha.stf.respository.ClienteRepository;
+import com.pichincha.stf.respository.SolicitudCreditoRepository;
 import com.pichincha.stf.service.ClienteServicio;
 import com.pichincha.stf.service.ProcesadorCsvServicio;
 import com.pichincha.stf.service.exception.CreditoAutomotrizException;
@@ -44,6 +44,9 @@ public class ClienteServicioImpl implements ClienteServicio {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private SolicitudCreditoRepository solicitudCreditoRepository;
 
 	/**
 	 * Carga los clientes a partir de un archivo csv
@@ -109,8 +112,35 @@ public class ClienteServicioImpl implements ClienteServicio {
 			throw new CreditoAutomotrizException(
 					"No existe cliente con la identificacion: ".concat(identificacionCliente));
 		} else {
+			obtenerClienteModificado(clienteConsultado, clienteTo.getCliente());
+			return clienteRepository.save(clienteConsultado);
 		}
-		return null;
+	}
+
+	@Override
+	public void eliminarCliente(Cliente cliente) throws CreditoAutomotrizException {
+		verificarReferenciasDelCliente(cliente);
+		clienteRepository.delete(cliente);
+	}
+
+	private void verificarReferenciasDelCliente(Cliente cliente) throws CreditoAutomotrizException {
+		if (!solicitudCreditoRepository.obtenerSolicitudesPorCliente(cliente).isEmpty()) {
+			throw new CreditoAutomotrizException("El cliente con identificacion ".concat(cliente.getIdentificacion())
+					.concat(" tiene solicitudes ingresadas"));
+		}
+	}
+
+	private void obtenerClienteModificado(Cliente clienteConsultado, Cliente cliente) {
+		clienteConsultado.setApellido(cliente.getApellido());
+		clienteConsultado.setDireccion(cliente.getDireccion());
+		clienteConsultado.setEdad(cliente.getEdad());
+		clienteConsultado.setEstadoCivil(cliente.getEstadoCivil());
+		clienteConsultado.setFechaNacimiento(cliente.getFechaNacimiento());
+		clienteConsultado.setIdentificacion(cliente.getIdentificacion());
+		clienteConsultado.setIdentificacionConyugue(cliente.getIdentificacionConyugue());
+		clienteConsultado.setNombre(cliente.getNombre());
+		clienteConsultado.setSujetoCredito(cliente.getSujetoCredito());
+		clienteConsultado.setTelefono(cliente.getTelefono());
 	}
 
 	private Cliente obtenerClientePorIdentificacion(String identificacion) {
