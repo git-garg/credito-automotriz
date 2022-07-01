@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.Data;
 
@@ -29,15 +30,19 @@ public class Patio {
 	private Long codigoPatio;
 
 	@Column
+	@NotEmpty(message = "El campo nombre es obligatorio")
 	private String nombre;
 
 	@Column
+	@NotEmpty(message = "El campo direccion es obligatorio")
 	private String direccion;
 
 	@Column
+	@NotEmpty(message = "El campo telefono es obligatorio")
 	private String telefono;
 
 	@Column(name = "numero_punto_venta")
+	@NotEmpty(message = "El campo numero de punto venta es obligatorio")
 	private String numeroPuntoVenta;
 
 }

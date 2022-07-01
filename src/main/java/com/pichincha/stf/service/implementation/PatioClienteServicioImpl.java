@@ -97,7 +97,7 @@ public class PatioClienteServicioImpl implements PatioClienteServicio {
 	@Override
 	public void eliminarPatioCliente(String numeroPuntoVenta, String identificacion) throws CreditoAutomotrizException {
 		List<SolicitudCredito> listaSolicitudes = solicitudCreditoRepository
-				.obtenerSolicitudPorNumeroPuntoVentaIdentificacion(numeroPuntoVenta, identificacion)
+				.obtenerSolicitudesPorNumeroPuntoVentaIdentificacion(numeroPuntoVenta, identificacion)
 				.orElse(new ArrayList<>());
 		if (listaSolicitudes.isEmpty()) {
 			Cliente cliente = obtenerClientPorIdentificacion(identificacion);

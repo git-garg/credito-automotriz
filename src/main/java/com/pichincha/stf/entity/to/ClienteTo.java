@@ -16,9 +16,7 @@ public class ClienteTo {
 
 	private Cliente cliente;
 
-	public ClienteTo() {
-
-	}
+	public ClienteTo() {}
 
 	public ClienteTo(Cliente cliente) {
 		super();

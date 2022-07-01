@@ -123,7 +123,7 @@ public class SolicitudCreditoServicioImpl implements SolicitudCreditoServicio {
 	public List<SolicitudCredito> obtenerSolicitudPorNumeroPuntoVentaIdentificacion(String numeroPuntoVenta,
 			String identificacion) {
 		return solicitudCreditoRepository
-				.obtenerSolicitudPorNumeroPuntoVentaIdentificacion(numeroPuntoVenta, identificacion)
+				.obtenerSolicitudesPorNumeroPuntoVentaIdentificacion(numeroPuntoVenta, identificacion)
 				.orElse(new ArrayList<>());
 	}
 

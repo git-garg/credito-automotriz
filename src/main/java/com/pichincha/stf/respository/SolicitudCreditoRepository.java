@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.pichincha.stf.entity.Cliente;
+import com.pichincha.stf.entity.Patio;
 import com.pichincha.stf.entity.SolicitudCredito;
 
 /**
@@ -30,6 +31,10 @@ public interface SolicitudCreditoRepository extends JpaRepository<SolicitudCredi
 
 	@Query("SELECT sc FROM SolicitudCredito sc WHERE sc.patio.numeroPuntoVenta = :numeroPuntoVenta "
 			+ " AND sc.cliente.identificacion = :identificacion")
-	Optional<List<SolicitudCredito>> obtenerSolicitudPorNumeroPuntoVentaIdentificacion(
+	Optional<List<SolicitudCredito>> obtenerSolicitudesPorNumeroPuntoVentaIdentificacion(
 			@Param("numeroPuntoVenta") String numeroPuntoVenta, @Param("identificacion") String identificacion);
+
+	@Query("SELECT sc FROM SolicitudCredito sc WHERE sc.patio = :patio ")
+	Optional<List<SolicitudCredito>> obtenerSolicitudesPorPatio(@Param("patio") Patio patio);
+
 }
