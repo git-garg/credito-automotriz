@@ -19,9 +19,6 @@ public class FechaUtil {
 
 	public static LocalDate obtenerFechaFormato(String fecha, String formato) throws CreditoAutomotrizException {
 
-		// DateTimeFormatter fechaFormato = DateTimeFormatter.ofPattern(formato,
-		// Locale.US);
-
 		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern(formato, Locale.US);
 		LocalDate date = LocalDate.parse(fecha, formatoFecha);
 
